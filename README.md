@@ -13,8 +13,8 @@ All resources comes from Internet and Jinhui Zhu, professor of School of Softwar
 > Java version: openJDK 11.0.5  
 > Code tool: Visual Studio Code
 
-Some configs are needed before you want to run with VSCode.  
-`.vscode/arduino`   
+Some configs are needed before you want to run with VSCode (with Arduino extensions installed).  
+.vscode/arduino:  
 ```javascript
 {
     "board": "arduino:avr:uno",
@@ -24,7 +24,7 @@ Some configs are needed before you want to run with VSCode.
 }
 ```
 
-`c_cpp_properties.json`
+c_cpp_properties.json:  
 ```javascript
 {
     "configurations": [
