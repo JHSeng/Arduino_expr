@@ -15,7 +15,7 @@ All resources comes from Internet and Jinhui Zhu, professor of School of Softwar
 
 Some configs are needed before you want to run with VSCode (with Arduino extensions installed).  
 
-**.vscode/arduino**:  
+**.vscode/arduino.json**:  
 ```javascript
 {
     "board": "arduino:avr:uno",
@@ -25,7 +25,7 @@ Some configs are needed before you want to run with VSCode (with Arduino extensi
 }
 ```
 
-**c_cpp_properties.json**:  
+**.vscode/c_cpp_properties.json**:  
 ```javascript
 {
     "configurations": [
