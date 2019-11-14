@@ -14,7 +14,7 @@ void setup() {
     //  pinMode(LED_BUILTIN, OUTPUT);
 
     // 超声波测试
-    Serial.begin(9600);
+    Serial.begin(115200);
     pinMode(Trig, OUTPUT);
     pinMode(Echo, INPUT);
 }
