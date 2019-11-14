@@ -6,13 +6,13 @@ This repo recorded my learning process of Arduino, including basic functions and
 All resources comes from Internet and Jinhui Zhu, professor of School of Software Engineering, South China University of Technology.
 
 ## Environment
-> OS: Manjaro 18.1.2 Juhraya  
-> Kernel version: x86_64 Linux 4.19.81-1-MANJARO  
-> Board: Arduino Uno  
-> Arduino version: 1.8.9  
-> Java version: openJDK 11.0.5  
-> Develop tool: Visual Studio Code / Arduino IDE 1.8.9
-> Programmer: AVRISP mkII
+- OS: Manjaro 18.1.2 Juhraya  
+- Kernel version: x86_64 Linux 4.19.81-1-MANJARO   
+- Board: Arduino Uno  
+- Arduino version: 1.8.9  
+- Java version: openJDK 11.0.5  
+- Develop tool: Visual Studio Code / Arduino IDE 1.8.9
+- Programmer: AVRISP mkII
 
 It’s easy to run program when using Arduino IDE. However, some configs are needed before you want to run with VSCode (with Arduino extensions installed).  
 
