@@ -4,7 +4,8 @@
 #define WHEEL_RIGHT_2 6
 #define WHEEL_LEFT_1 9
 #define WHEEL_LEFT_2 10
-#define INFRARED 11
+#define INFRARED_1 11
+#define INFRARED_2 12
 #define FORWARD_LIMIT 10.0
 #define EPS 1e-6
 
@@ -26,7 +27,8 @@ void setup() {
     pinMode(WHEEL_RIGHT_2, OUTPUT);
 
     // rightNotBlocked init
-    pinMode(INFRARED, INPUT);
+    pinMode(INFRARED_1, INPUT);
+    pinMode(INFRARED_2, INPUT);
 }
 
 void stateInit() {
@@ -58,7 +60,7 @@ void turnRight() {
     clearWheelState();
     digitalWrite(WHEEL_RIGHT_1, HIGH);
     digitalWrite(WHEEL_RIGHT_2, LOW);
-    delay(100);
+    delay(200);
     clearWheelState();
     digitalWrite(WHEEL_LEFT_1, LOW);
     digitalWrite(WHEEL_LEFT_2, HIGH);
@@ -72,7 +74,7 @@ void turnLeft() {
     clearWheelState();
     digitalWrite(WHEEL_LEFT_1, HIGH);
     digitalWrite(WHEEL_LEFT_2, LOW);
-    delay(100);
+    delay(200);
     clearWheelState();
     digitalWrite(WHEEL_RIGHT_1, LOW);
     digitalWrite(WHEEL_RIGHT_2, HIGH);
@@ -82,7 +84,7 @@ void turnLeft() {
     delay(200);
 }
 
-int forwardBlocked() {
+int rightBlocked() {
     digitalWrite(TRIG, HIGH);
     delayMicroseconds(10);
     digitalWrite(TRIG, LOW);
@@ -96,9 +98,10 @@ int forwardBlocked() {
     }
 }
 
-int rightBlocked() {
-    int tmp = digitalRead(INFRARED);
-    return !tmp;
+int frontBlocked() {
+    int right_1 = digitalRead(INFRARED_1);
+    int right_2 = digitalRead(INFRARED_2);
+    return !right_1 || !right_2;
 }
 
 void loop() {
@@ -110,7 +113,7 @@ void loop() {
         turnRight();
     } else {
         // judge go straight
-        if (!forwardBlocked()) {
+        if (!frontBlocked()) {
             moveForward();
             delay(100);
         } else {
