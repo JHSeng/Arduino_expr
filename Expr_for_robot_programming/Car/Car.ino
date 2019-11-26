@@ -6,8 +6,9 @@
 #define WHEEL_LEFT_2 10
 #define INFRARED_1 11
 #define INFRARED_2 12
-#define FORWARD_LIMIT 10.0
+#define FORWARD_LIMIT 50
 #define EPS 1e-6
+#define SPEED 120
 
 void setup() {
     // serial init
@@ -36,34 +37,34 @@ void stateInit() {
 }
 
 void moveForward() {
-    digitalWrite(WHEEL_LEFT_1, LOW);
-    digitalWrite(WHEEL_LEFT_2, HIGH);
-    digitalWrite(WHEEL_RIGHT_1, LOW);
-    digitalWrite(WHEEL_RIGHT_2, HIGH);
+    analogWrite(WHEEL_LEFT_1, 0);
+    analogWrite(WHEEL_LEFT_2, SPEED);
+    analogWrite(WHEEL_RIGHT_1, 0);
+    analogWrite(WHEEL_RIGHT_2, SPEED);
 }
 
 void clearWheelState() {
-    digitalWrite(WHEEL_LEFT_1, LOW);
-    digitalWrite(WHEEL_LEFT_2, LOW);
-    digitalWrite(WHEEL_RIGHT_1, LOW);
-    digitalWrite(WHEEL_RIGHT_2, LOW);
+    analogWrite(WHEEL_LEFT_1, 0);
+    analogWrite(WHEEL_LEFT_2, 0);
+    analogWrite(WHEEL_RIGHT_1, 0);
+    analogWrite(WHEEL_RIGHT_2, 0);
 }
 
 void moveBackward() {
-    digitalWrite(WHEEL_LEFT_1, HIGH);
-    digitalWrite(WHEEL_LEFT_2, LOW);
-    digitalWrite(WHEEL_RIGHT_1, HIGH);
-    digitalWrite(WHEEL_RIGHT_2, LOW);
+    analogWrite(WHEEL_LEFT_1, SPEED);
+    analogWrite(WHEEL_LEFT_2, 0);
+    analogWrite(WHEEL_RIGHT_1, SPEED);
+    analogWrite(WHEEL_RIGHT_2, 0);
 }
 
 void turnRight() {
     clearWheelState();
-    digitalWrite(WHEEL_RIGHT_1, HIGH);
-    digitalWrite(WHEEL_RIGHT_2, LOW);
-    delay(200);
+    analogWrite(WHEEL_RIGHT_1, SPEED);
+    analogWrite(WHEEL_RIGHT_2, 0);
+    delay(500);
     clearWheelState();
-    digitalWrite(WHEEL_LEFT_1, LOW);
-    digitalWrite(WHEEL_LEFT_2, HIGH);
+    analogWrite(WHEEL_LEFT_1, 0);
+    analogWrite(WHEEL_LEFT_2, SPEED);
     delay(500);
     clearWheelState();
     moveForward();
@@ -72,12 +73,12 @@ void turnRight() {
 
 void turnLeft() {
     clearWheelState();
-    digitalWrite(WHEEL_LEFT_1, HIGH);
-    digitalWrite(WHEEL_LEFT_2, LOW);
-    delay(200);
+    analogWrite(WHEEL_LEFT_1, SPEED);
+    analogWrite(WHEEL_LEFT_2, 0);
+    delay(500);
     clearWheelState();
-    digitalWrite(WHEEL_RIGHT_1, LOW);
-    digitalWrite(WHEEL_RIGHT_2, HIGH);
+    analogWrite(WHEEL_RIGHT_1, 0);
+    analogWrite(WHEEL_RIGHT_2, SPEED);
     delay(500);
     clearWheelState();
     moveForward();
@@ -91,6 +92,11 @@ int rightBlocked() {
 
     float temp = float(pulseIn(ECHO, HIGH));
     float cm = temp * 17 / 1000.0;
+    Serial.print("Echo = ");
+    Serial.print(temp);
+    Serial.print(" | Distance = ");
+    Serial.print(cm);
+    Serial.println("cm");
     if (cm - FORWARD_LIMIT < EPS) {
         return 1;
     } else {
@@ -98,27 +104,26 @@ int rightBlocked() {
     }
 }
 
-int frontBlocked() {
-    int right_1 = digitalRead(INFRARED_1);
-    int right_2 = digitalRead(INFRARED_2);
-    return !right_1 || !right_2;
+int frontTest() {
+    int leftNotBlocked = digitalRead(INFRARED_1);
+    int rightNotBlocked = digitalRead(INFRARED_2);
+    if (leftNotBlocked && rightNotBlocked) return 1;
+    else if (leftNotBlocked && !rightNotBlocked) return 2;
+    else if (!leftNotBlocked && rightNotBlocked) return 3;
+    else return 4;
 }
 
 void loop() {
     // car state init
     stateInit();
-
-    // judge turn right
-    if (!rightBlocked()) {
+    int res = frontTest();
+    if (res == 1) {
+        moveForward();
+        delay(300);
+    } else if (res == 2 || res == 3) {
+        if (!rightBlocked()) turnRight();
+        else turnLeft();
+    } else if (!rightBlocked()) {
         turnRight();
-    } else {
-        // judge go straight
-        if (!frontBlocked()) {
-            moveForward();
-            delay(100);
-        } else {
-            // turn left
-            turnLeft();
-        }
-    }
+    } else turnLeft();
 }
