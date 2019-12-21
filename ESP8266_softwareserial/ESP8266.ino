@@ -10,7 +10,7 @@ IPAddress subnet(255, 255, 255, 0);
 
 void connectWiFi() {
     WiFi.config(localIP, gateway, subnet);
-    WiFi.mode()
+    // WiFi.mode()
 }
 
 void setup() {
